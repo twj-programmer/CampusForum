@@ -1,0 +1,27 @@
+spring:
+  security:
+    filter:
+      order: -100
+    jwt:
+      key: password
+      expire: 7
+  data:
+    redis:
+      host: 192.168.174.128
+      port: 6379
+      password: twj200486
+      database: 0
+  rabbitmq:
+    addresses: 192.168.174.128
+    username: twj
+    password: twj200486
+    virtual-host: /
+  datasource:
+    url: jdbc:mysql://192.168.174.128:3306/DB_JWT
+    username: root
+    password: twj200486
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mail:
+    host: smtp.163.com
+    password: FBtLseiqc2hHhY3r
+    username: twj944725820@163.com

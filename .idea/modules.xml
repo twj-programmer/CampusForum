@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/JWT-Demo.iml" filepath="$PROJECT_DIR$/JWT-Demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jwt-demo-frontend.iml" filepath="$PROJECT_DIR$/jwt-demo-frontend.iml" />
+    </modules>
+  </component>
+</project>
