@@ -1,7 +1,7 @@
 package com.forum.utils;
 
 public class Const {
-    public static final String JWT_BLACK_LIST = "jwt:blacklist:";
+    public static final String JWT_BLACK_LIST = "forum:blacklist:";
     public static final int ORDER_CORS = -102;
     public static final int ORDER_LIMIT = -101;
 
