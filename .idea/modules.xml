@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JWT-Demo.iml" filepath="$PROJECT_DIR$/JWT-Demo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jwt-demo-frontend.iml" filepath="$PROJECT_DIR$/jwt-demo-frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CampusForum.iml" filepath="$PROJECT_DIR$/CampusForum.iml" />
+      <module fileurl="file://$PROJECT_DIR$/campusforum-frontend.iml" filepath="$PROJECT_DIR$/campusforum-frontend.iml" />
     </modules>
   </component>
 </project>
