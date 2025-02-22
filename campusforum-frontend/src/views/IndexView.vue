@@ -38,7 +38,8 @@ function userLogout() {
   <div class="main-content" v-loading="loading" element-loading-text="正在进入，请稍后...">
     <el-container style="height: 100%" v-if="!loading">
       <el-header class="main-content-header">
-        <el-image class="logo" src="https://nic.xtu.edu.cn/images/logo_wlxxzx.png"></el-image>
+        <el-image class="logo" src="/logo.png" style="width: 90px; height: 80px; margin-left: 10px"/>
+        <el-image class="logo" src="/xtu.png" style="width: 200px; height: 80px; margin-left: 10px" />
         <div style="flex: 1;padding: 0 20px; text-align: center">
           <el-input v-model="searchInput.text" style="width: 100%; max-width: 500px" placeholder="搜索论坛相关内容...">
             <template #prefix>
