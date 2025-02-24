@@ -2,13 +2,17 @@
 import Card from "@/components/Card.vue";
 import {Message, Refresh, Select, User} from "@element-plus/icons-vue";
 import {useStore} from "@/store/index.js";
-import {computed} from "vue";
-import {reactive}
-  from "vue";
+import {computed, ref} from "vue";
+import {reactive} from "vue";
+import {ElMessage} from "element-plus";
+import {post, get} from "@/net/net.js"
 
 const store = useStore()
 const registerTime = computed(() => new Date(store.user.registerTime).toLocaleString())
 
+const baseFormRef = ref()
+const emailFormRef = ref()
+const desc = ref('')
 const baseForm = reactive({
   username: '',
   gender: 1,
@@ -43,13 +47,82 @@ const rules = {
     { len: 6, message: '验证码长度必须为6位', trigger: ['blur', 'change'] }
   ]
 }
+
+const loading = reactive({
+  form: true,
+  base: false
+})
+
+function saveDetails() {
+  baseFormRef.value.validate(isValid => {
+      if (isValid) {
+        loading.base = true
+        post('/api/user/save-details', baseForm, () => {
+          ElMessage.success('用户信息保存成功')
+          store.user.username = baseForm.username
+          desc.value = baseForm.desc
+          loading.base = false
+        }, (message) => {
+          ElMessage.warning(message)
+          loading.base = false
+        })
+      }
+  })
+}
+get('/api/user/details', data => {
+  baseForm.username = store.user.username
+  baseForm.gender = data.gender
+  baseForm.phone = data.phone
+  baseForm.qq = data.qq
+  baseForm.wx = data.wx
+  baseForm.desc = desc.value = data.desc
+  emailForm.desc = store.user.email
+  loading.form = false
+})
+
+const coldTime = ref(0)
+const isEmailValid = ref(true)
+const onValidate = (prop, isValid) => {
+  if (prop === 'email')
+    isEmailValid.value = isValid
+}
+function sendEmailCode() {
+  emailFormRef.value.validate(isValid => {
+    if (isValid) {
+      coldTime.value = 60
+      get(`/api/auth/ask-code?email=${emailForm.email}&type=modify`, () => {
+        ElMessage.success(`验证码已成功发送到邮箱：${emailForm.email}，请注意查收`)
+        const handle = setInterval(() => {
+          coldTime.value--
+          if (coldTime.value === 0) {
+            clearInterval(handle)
+          }
+        }, 1000)
+      }, (message) => {
+        ElMessage.warning(message)
+        coldTime.value = 0
+      })
+    }
+  })
+}
+function modifyEmail() {
+  emailFormRef.value.validate(isValid => {
+    if (isValid) {
+      post('/api/user/modify-email', emailForm, () => {
+        ElMessage.success('邮箱修改成功')
+        store.user.email = emailForm.email
+        emailForm.code = ''
+      })
+    }
+  })
+}
 </script>
 
 <template>
-  <div style="display: flex">
+  <div style="display: flex; max-width: 950px; margin: auto">
     <div class="settings-left">
-      <card :icon="User" title="账号信息设置" desc="在这里编辑您的个人信息，您可以在隐私设置中选择是否展示这些信息">
-        <el-form :model="baseForm" :rules="rules" label-position="top" style="margin: 5px 10px 10px 10px">
+      <card :icon="User" title="账号信息设置" desc="在这里编辑您的个人信息，您可以在隐私设置中选择是否展示这些信息" v-loading="loading.form">
+        <el-form :model="baseForm" :rules="rules" ref="baseFormRef" label-position="top" style="margin: 5px 10px 10px 10px">
           <el-form-item label="用户名" prop="username">
             <el-input v-model="baseForm.username"/>
           </el-form-item>
@@ -72,12 +145,12 @@ const rules = {
             <el-input v-model="baseForm.desc" type="textarea" :rows="6" maxlength="200"/>
           </el-form-item>
           <div>
-            <el-button :icon="Select" type="success">保存用户信息</el-button>
+            <el-button :icon="Select" @click="saveDetails" :loading="loading.base" type="success">保存用户信息</el-button>
           </div>
         </el-form>
       </card>
       <card style="margin-top: 10px" :icon="Message" title="邮箱设置" desc="您可以在这里修改默认绑定的电子邮件地址">
-        <el-form :rules="rules" :model="emailForm" label-position="top" style="margin: 5px 10px 10px 10px">
+        <el-form :rules="rules" :model="emailForm" @validate="onValidate" ref="emailFormRef" label-position="top" style="margin: 5px 10px 10px 10px">
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="emailForm.email"/>
           </el-form-item>
@@ -87,12 +160,14 @@ const rules = {
                 <el-input placeholder="请获取验证码" v-model="emailForm.code"/>
               </el-col>
               <el-col :span="6">
-                <el-button style="width: 100%" type="success" plain>获取验证码</el-button>
+                <el-button style="width: 100%" type="success" @click="sendEmailCode" :disabled="!isEmailValid || coldTime > 0" plain>
+                  {{ coldTime > 0 ? `请稍后 ${coldTime} 秒` : '获取验证码' }}
+                </el-button>
               </el-col>
             </el-row>
           </el-form-item>
           <div>
-            <el-button :icon="Refresh" type="success">更换邮箱</el-button>
+            <el-button :icon="Refresh" @click="modifyEmail" type="success">更换邮箱</el-button>
           </div>
         </el-form>
       </card>
@@ -106,7 +181,7 @@ const rules = {
           </div>
           <el-divider style="margin: 10px 0"/>
           <div style="font-size: 14px; color: grey; padding: 10px">
-            大家好！我是撸管大王，欢迎来到我的个人主页！
+            {{ desc || '这个用户很懒，没有填写个人简介~'}}
           </div>
         </card>
         <card style="margin-top: 10px; font-size: 14px">

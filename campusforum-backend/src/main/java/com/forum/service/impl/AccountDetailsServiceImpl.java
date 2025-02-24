@@ -8,6 +8,7 @@ import com.forum.service.AccountDetailsService;
 import com.forum.service.AccountService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountDetailsServiceImpl extends ServiceImpl<AccountDetailsMapper, AccountDetails> implements AccountDetailsService {
@@ -21,6 +22,7 @@ public class AccountDetailsServiceImpl extends ServiceImpl<AccountDetailsMapper,
     }
 
     @Override
+    @Transactional
     public synchronized boolean saveAccountDetails(int id, DetailsSaveVO vo) {
         accountService.update()
                 .eq("id", id)

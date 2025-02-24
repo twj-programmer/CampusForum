@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Ubuntu64_VM_MySQL" uuid="c4cdf434-352c-4a5b-a884-f94479b698ae">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://192.168.174.128:3306</jdbc-url>
-      <jdbc-additional-properties>
-        <property name="com.intellij.clouds.kubernetes.db.host.port" />
-        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
-        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
-        <property name="com.intellij.clouds.kubernetes.db.container.port" />
-      </jdbc-additional-properties>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
     <data-source source="LOCAL" name="Ubuntu64_VM_Redis" uuid="d3be086e-7b36-469e-a6e8-cdcad87d29a3">
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
@@ -26,11 +13,9 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="DB_JWT@192.168.174.128" uuid="8d5d2399-eac1-4044-8985-ddc24714a405">
+    <data-source source="LOCAL" name="Ubuntu64_VM_MySQL" uuid="7fd69f88-7914-4e7d-bf6f-f791de4e928b">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>$PROJECT_DIR$/campusforum-backend/src/main/resources/application.yaml</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://192.168.174.128:3306/DB_JWT</jdbc-url>
       <jdbc-additional-properties>

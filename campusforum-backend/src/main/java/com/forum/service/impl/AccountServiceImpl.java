@@ -2,9 +2,7 @@ package com.forum.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.forum.entity.dto.Account;
-import com.forum.entity.vo.request.EmailRegisterVO;
-import com.forum.entity.vo.request.EmailResetVO;
-import com.forum.entity.vo.request.ForgetConfirmVO;
+import com.forum.entity.vo.request.*;
 import com.forum.mapper.AccountMapper;
 import com.forum.service.AccountService;
 import com.forum.utils.Const;
@@ -123,6 +121,33 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public Account findAccountById(int id) {
         return this.query().eq("id", id).one();
+    }
+
+    @Override
+    public String modifyEmail(int id, ModifyEmailVO vo) {
+        String code = stringRedisTemplate.opsForValue().get(Const.VERIFY_EMAIL_DATA + vo.getEmail());
+        if (code == null) return "请先获取验证码";
+        if (!code.equals(vo.getCode())) return "验证码错误，请重新输入";
+        stringRedisTemplate.delete(Const.VERIFY_EMAIL_DATA + vo.getEmail());
+        Account account = this.findAccountByEmail(vo.getEmail());
+        if (account != null && account.getId() != id) return "邮箱已注册";
+        this.update()
+                .set("email", vo.getEmail())
+                .eq("id", id)
+                .update();
+        return null;
+    }
+
+    @Override
+    public String changePassword(int id, ChangePasswordVO vo) {
+        String password = this.query().eq("id", id).one().getPassword();
+        if (!passwordEncoder.matches(vo.getPassword(), password))
+            return "原密码错误，请重新输入！";
+        boolean success = this.update()
+                .eq("id", id)
+                .set("password", passwordEncoder.encode(vo.getNew_password()))
+                .update();
+        return success ? null : "未知错误，请联系管理员";
     }
 
     private boolean verifyLimit(String ip) {

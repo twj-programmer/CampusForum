@@ -2,9 +2,7 @@ package com.forum.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.forum.entity.dto.Account;
-import com.forum.entity.vo.request.EmailRegisterVO;
-import com.forum.entity.vo.request.EmailResetVO;
-import com.forum.entity.vo.request.ForgetConfirmVO;
+import com.forum.entity.vo.request.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AccountService extends IService<Account>, UserDetailsService {
@@ -14,4 +12,6 @@ public interface AccountService extends IService<Account>, UserDetailsService {
     String forgetConfirm(ForgetConfirmVO vo);
     String resetPassword(EmailResetVO vo);
     Account findAccountById(int id);
+    String modifyEmail(int id, ModifyEmailVO vo);
+    String changePassword(int id, ChangePasswordVO vo);
 }

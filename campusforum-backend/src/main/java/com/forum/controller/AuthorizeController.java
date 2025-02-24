@@ -26,7 +26,7 @@ public class AuthorizeController {
 
     @GetMapping("/ask-code")
     public RestBean<Void> askVerifyCode(@RequestParam @Email String email,
-                                        @RequestParam @Pattern(regexp = "(register|reset)") String type,
+                                        @RequestParam @Pattern(regexp = "(register|reset|modify)") String type,
                                         HttpServletRequest request) {
         return this.messageHandle(() -> service.registerEmailVerifyCode(type, email, request.getRemoteAddr()));
     }
@@ -50,7 +50,7 @@ public class AuthorizeController {
         return this.messageHandle(() -> function.apply(vo));
     }
 
-    private RestBean<Void> messageHandle(Supplier<String> action) {
+    private <T> RestBean<T> messageHandle(Supplier<String> action) {
         String message = action.get();
         if (message == null)
             return RestBean.success();
