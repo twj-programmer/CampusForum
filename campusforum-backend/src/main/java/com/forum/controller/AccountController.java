@@ -6,9 +6,12 @@ import com.forum.entity.dto.AccountDetails;
 import com.forum.entity.vo.request.ChangePasswordVO;
 import com.forum.entity.vo.request.DetailsSaveVO;
 import com.forum.entity.vo.request.ModifyEmailVO;
+import com.forum.entity.vo.request.PrivacySaveVO;
 import com.forum.entity.vo.response.AccountDetailsVO;
+import com.forum.entity.vo.response.AccountPrivacyVO;
 import com.forum.entity.vo.response.AccountVO;
 import com.forum.service.AccountDetailsService;
+import com.forum.service.AccountPrivacyService;
 import com.forum.service.AccountService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -26,6 +29,9 @@ public class AccountController {
 
     @Resource
     AccountDetailsService accountDetailsService;
+
+    @Resource
+    AccountPrivacyService accountPrivacyService;
 
     @GetMapping("/info")
     public RestBean<AccountVO> info(@RequestAttribute("id") int id) {
@@ -58,6 +64,18 @@ public class AccountController {
     public RestBean<Void> changePassword(@RequestAttribute("id") int id,
                                          @RequestBody @Valid ChangePasswordVO vo) {
         return this.messageHandle(() -> accountService.changePassword(id, vo));
+    }
+
+    @PostMapping("/save-privacy")
+    public RestBean<Void> savePrivacy(@RequestAttribute("id") int id,
+                                      @RequestBody @Valid PrivacySaveVO vo) {
+        accountPrivacyService.savePrivacy(id, vo);
+        return RestBean.success();
+    }
+
+    @GetMapping("/privacy")
+    public RestBean<AccountPrivacyVO> privacy(@RequestAttribute("id") int id) {
+        return RestBean.success(accountPrivacyService.accountPrivacy(id).asViewObject(AccountPrivacyVO.class));
     }
 
     private <T> RestBean<T> messageHandle(Supplier<String> action) {
