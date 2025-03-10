@@ -61,7 +61,7 @@ function userLogout() {
             <div>{{ store.user.email }}</div>
           </div>
           <el-dropdown>
-            <el-avatar src="/avatar.jpg" style="height: 50px; width: 50px"/>
+            <el-avatar :src="store.avatarUrl" style="height: 50px; width: 50px"/>
             <template #dropdown>
               <el-dropdown-item>
                 <el-icon><Operation/></el-icon>

@@ -1,19 +1,62 @@
 <script setup>
 import LightCard from "@/components/LightCard.vue";
-import {Calendar, CollectionTag, Link} from "@element-plus/icons-vue";
+import {Calendar, CollectionTag, EditPen, Link} from "@element-plus/icons-vue";
 import Weather from "@/components/Weather.vue";
-import {computed} from "vue";
+import {computed, reactive} from "vue";
+import {get} from "@/net/net.js";
+import {ElMessage} from "element-plus";
+
+const weather = reactive({
+  location: {},
+  now: {},
+  hourly: [],
+  success: false
+})
 
 const today = computed(() => {
   const date = new Date();
   return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+})
+
+navigator.geolocation.getCurrentPosition(position => {
+  const longitude = position.coords.longitude;
+  const latitude = position.coords.latitude;
+  console.log(longitude, latitude);
+  get(`/api/forum/weather?longtitude=${longitude}&latitude=${latitude}`, data => {
+    console.log(data);
+    Object.assign(weather, data);
+    weather.success = true;
+  })
+}, error => {
+  console.log(error);
+  ElMessage.warning("位置信息和获取超时，请检查网络设置");
+  get(`/api/forum/weather?longtitude=116.40529&latitude=39.90499`, data => {
+    Object.assign(weather, data);
+    weather.success = true;
+  })
+}, {
+  enableHighAccuracy: true,
+  timeout: 3000
 })
 </script>
 
 <template>
   <div style="display: flex; margin: 20px auto; gap: 20px; max-width: 900px">
     <div style="flex: 1">
-      <light-card style="height: 2000px"/>
+      <light-card>
+        <div class="create-topic">
+          <el-icon><EditPen/></el-icon>
+          <span style="color: grey"> 点击发表新话题...</span>
+        </div>
+      </light-card>
+      <light-card style="margin-top: 10px; height: 30px">
+
+      </light-card>
+      <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px">
+        <light-card style="height: 150px" v-for="item in 10">
+
+        </light-card>
+      </div>
     </div>
     <div style="width: 280px">
       <div style="position: sticky; top: 20px">
@@ -33,7 +76,7 @@ const today = computed(() => {
             当地天气
           </div>
           <el-divider style="margin: 10px 0"/>
-          <weather/>
+          <weather :data="weather"/>
         </light-card>
         <light-card style="margin-top: 10px">
           <div class="info-text">
@@ -65,11 +108,24 @@ const today = computed(() => {
   </div>
 </template>
 
-<style scoped>
+<style lang="less" scoped>
 .info-text {
   display: flex;
   justify-content: space-between;
   color: grey;
   font-size: 14px
+}
+.create-topic {
+  background-color: #efefef;
+  border-radius: 5px;
+  height: 40px;
+  font-size: 14px;
+  line-height: 40px;
+  padding: 0 10px;
+  color: grey;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>

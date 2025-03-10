@@ -24,6 +24,8 @@ public class Account implements BaseData {
         String email;
         @TableField("role")
         String role;
+        @TableField("avatar")
+        String avatar;
         @TableField("register_time")
         Date registerTime;
 }

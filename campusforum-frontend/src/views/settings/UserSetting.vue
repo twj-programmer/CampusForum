@@ -5,7 +5,8 @@ import {useStore} from "@/store/index.js";
 import {computed, ref} from "vue";
 import {reactive} from "vue";
 import {ElMessage} from "element-plus";
-import {post, get} from "@/net/net.js"
+import {post, get, accessHeader} from "@/net/net.js"
+import axios from "axios";
 
 const store = useStore()
 const registerTime = computed(() => new Date(store.user.registerTime).toLocaleString())
@@ -116,6 +117,19 @@ function modifyEmail() {
     }
   })
 }
+
+function beforeAvatarUpload(rawFile) {
+  if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
+    ElMessage.error('只能上传 JPG/PNG 格式的图片')
+    return false
+  }
+  return true
+}
+
+function uploadSuccess(response) {
+  ElMessage.success('头像上传成功')
+  store.user.avatar = response.data
+}
 </script>
 
 <template>
@@ -176,7 +190,13 @@ function modifyEmail() {
       <div style="position: sticky; top: 20px">
         <card>
           <div style="text-align: center; padding: 5px 15px 0 15px">
-            <el-avatar :size="70" src="/avatar.jpg"/>
+            <el-avatar :size="70" :src="store.avatarUrl"/>
+            <div style="margin: 5px 0">
+              <el-upload :action="axios.defaults.baseURL + '/api/image/avatar'"
+                         :show-file-list="false" :before-upload="beforeAvatarUpload" :on-success="uploadSuccess" :headers="accessHeader()">
+                <el-button size="small" round>修改头像</el-button>
+              </el-upload>
+            </div>
             <div style="font-weight: bold">你好, {{ store.user.username }}</div>
           </div>
           <el-divider style="margin: 10px 0"/>

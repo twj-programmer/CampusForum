@@ -83,7 +83,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         if (!code.equals(vo.code())) return "验证码错误";
         if (this.findAccountByEmail(email) != null) return "邮箱已注册";
         String password = passwordEncoder.encode(vo.password());
-        Account account = new Account(null, username, password, email, "USER", new Date());
+        Account account = new Account(null, username, password, email, "USER", null, new Date());
         if (this.save(account)) {
             stringRedisTemplate.delete(Const.VERIFY_EMAIL_DATA + email);
             return null;

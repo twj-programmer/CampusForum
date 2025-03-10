@@ -23,5 +23,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
     host: smtp.163.com
-    password: FBtLseiqc2hHhY3r
+    password: DEiBz32f9udAAUXV
     username: twj944725820@163.com
+  minio:
+    endpoint: 'http://192.168.174.128:9000'
+    username: 'twj'
+    password: 'twj200486'
+  weather:
+    key: dbc1c79dc44943949847b73cb1cc5f04

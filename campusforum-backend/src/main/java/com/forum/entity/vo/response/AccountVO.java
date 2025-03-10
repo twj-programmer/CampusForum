@@ -11,5 +11,6 @@ public class AccountVO {
     public String username;
     public String email;
     public String role;
+    public String avatar;
     public Date registerTime;
 }
